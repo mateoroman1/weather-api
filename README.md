@@ -140,6 +140,7 @@ This came with some limitations that I am not exactly enthusiastic about but the
 
 ### Possible future steps
 
+* Implement async on the router and client external API calls
 * Containerization with Docker
 * Fully implement repository pattern
 * Logging and error handling
