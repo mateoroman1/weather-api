@@ -42,22 +42,24 @@ class WeatherRepository:
     def __init__(self):
         init_db()
 
-    def save_request(record: RequestRecord):
+    def save_request(self, record: RequestRecord):
         with get_db() as conn:
             cursor = conn.cursor()
 
             statement = "INSERT INTO weather_requests (" \
             "id, " \
+            "response, " \
             "timestamp, " \
             "requested_location, " \
             "resolved_location," \
             "latitude, " \
             "longitude, " \
             "data" \
-            ") VALUES (?, ?, ?, ?, ?, ?, ?)"
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 
             cursor.execute(statement, (
                 record.id,
+                record.response,
                 record.timestamp,
                 record.requested_location,
                 record.resolved_location,
@@ -68,7 +70,7 @@ class WeatherRepository:
 
             return cursor.lastrowid
 
-    def get_request_history():
+    def get_request_history(self):
         # Pagination would be a good idea for this
         with get_db() as conn:
             cursor = conn.cursor()

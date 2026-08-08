@@ -19,7 +19,7 @@ class WeatherBase(AppModel):
 # store requests to the external api.
 class RequestRecord(BaseModel):
     id: Any | None = None
-    response: int | None = None # Not sure why these are coming up null
+    response: int | None = None # Not sure why these are coming up null # Forgot the response in the INSERT lmao
     timestamp: datetime = Field(default_factory=datetime.now)
     requested_location: str
     resolved_location: str

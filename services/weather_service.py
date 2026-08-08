@@ -34,13 +34,13 @@ class WeatherService:
             data=weather_data
         )
 
-        WeatherRepository.save_request(record)
+        self.weather_repository.save_request(record)
 
 
         return weather_data
 
     def get_request_history(self):
-        requests = WeatherRepository.get_request_history()
+        requests = self.weather_repository.get_request_history()
 
         return requests
 
