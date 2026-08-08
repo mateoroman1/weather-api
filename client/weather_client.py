@@ -1,8 +1,13 @@
 import openmeteo_requests
 import httpx
+from datetime import datetime
+import random
+import json
 
 import requests_cache
 from retry_requests import retry
+
+from models.schemas import WeatherBase
 
 GEOCODE_BASE_URL = "https://geocoding-api.open-meteo.com/v1/search"
 WEATHER_BASE_URL = "https://api.open-meteo.com/v1/forecast"
@@ -28,19 +33,29 @@ class WeatherClient():
 
         resolved_location = payload["results"][0]
 
-        return {
-            "requested_location": location,
-            "resolved_location": resolved_location.get('name', ""),
-            "latitude": resolved_location.get('latitude', 0),
-            "longitude": resolved_location.get('longitude')
-            }
+        # return {
+        #     "requested_location": location,
+        #     "resolved_location": resolved_location.get('name', ""),
+        #     "latitude": resolved_location.get('latitude', 0),
+        #     "longitude": resolved_location.get('longitude')
+        #     }
 
-    def get_weather_data(self, latitude, longitude):
+        return WeatherBase(
+            id=random.randint(10000, 99999),
+            success=True,
+            requested_location=location,
+            resolved_location=resolved_location.get('name'),
+            latitude=resolved_location.get('latitude'),
+            longitude=resolved_location.get('longitude'),
+            timestamp=datetime.now()
+        )
+
+    def get_weather_data(self, location_data: WeatherBase):
 
         # Not customizing any of the params yet, just getting basic weather info
         params = {
-            "latitude": latitude,
-            "longitude": longitude,
+            "latitude": location_data.latitude,
+            "longitude": location_data.longitude,
             "current": ["temperature_2m", "relative_humidity_2m", "apparent_temperature", "is_day", "precipitation", "cloud_cover", "wind_speed_10m", "wind_direction_10m", "wind_gusts_10m"]
         }
         responses = openmeteo.weather_api(WEATHER_BASE_URL, params = params)
@@ -65,3 +80,15 @@ class WeatherClient():
         }
 
         return weather_data
+
+        # omfg OPENMETEO-REQUESTS DOESNT RETURN A RESPONSE CODE!?!?!?!
+        # Very cool! Assume it's a 200 for now
+        # return RequestRecord(
+        #     id=location_data.id,
+        #     response=200,
+        #     requested_location=location_data.requested_location,
+        #     resolved_location=location_data.resolved_location,
+        #     latitude=location_data.latitude,
+        #     longitude=location_data.longitude,
+        #     data=json.dumps(weather_data)
+        # )

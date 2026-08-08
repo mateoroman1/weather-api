@@ -1,6 +1,6 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Json, Field
 from typing import Any
-from datetime import date
+from datetime import datetime
 
 class AppModel(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
@@ -12,18 +12,15 @@ class WeatherBase(AppModel):
     resolved_location: str
     latitude: float
     longitude: float
-    timestamp: date
-
-class WeatherResult(WeatherBase):
-    data: Any | None = None
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 # Persistence object
 # Seems like from the requirements we're wanting to
 # store requests to the external api.
 class RequestRecord(BaseModel):
     id: Any | None = None
-    response: int
-    timestamp: date
+    response: int | None = None # Not sure why these are coming up null
+    timestamp: datetime = Field(default_factory=datetime.now)
     requested_location: str
     resolved_location: str
     latitude: float

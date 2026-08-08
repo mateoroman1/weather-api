@@ -2,8 +2,9 @@ import sqlite3
 from contextlib import contextmanager
 import os
 import config
+import json
 
-from schemas import RequestRecord
+from models.schemas import RequestRecord
 
 @contextmanager
 def get_db():
@@ -49,10 +50,10 @@ class WeatherRepository:
             "id, " \
             "timestamp, " \
             "requested_location, " \
-            "resolved_location" \
+            "resolved_location," \
             "latitude, " \
             "longitude, " \
-            "data"
+            "data" \
             ") VALUES (?, ?, ?, ?, ?, ?, ?)"
 
             cursor.execute(statement, (
@@ -62,7 +63,7 @@ class WeatherRepository:
                 record.resolved_location,
                 record.latitude,
                 record.longitude,
-                record.data
+                json.dumps(record.data)
             ))
 
             return cursor.lastrowid
@@ -72,10 +73,11 @@ class WeatherRepository:
         with get_db() as conn:
             cursor = conn.cursor()
 
-            statement = "SELECT * FROM weather_records"
+            statement = "SELECT * FROM weather_requests ORDER BY timestamp"
 
             cursor.execute(statement)
 
             rows = cursor.fetchall()
 
-            return rows
+            # ty Google AI
+            return [RequestRecord(**dict(row)) for row in rows]
