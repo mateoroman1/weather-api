@@ -15,10 +15,12 @@ class WeatherService:
         geocode_result = self.weather_client.get_geocode_match(location_name)
 
         # validate response
-
+        latitude = geocode_result['latitude']
+        longitude = geocode_result['longitude']
         # request weather data
+        weather_data = self.weather_client.get_weather_data(latitude, longitude)
 
         # validate response
 
         # return
-        return geocode_result
+        return weather_data
