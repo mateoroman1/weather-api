@@ -75,7 +75,7 @@ class WeatherRepository:
         with get_db() as conn:
             cursor = conn.cursor()
 
-            statement = "SELECT * FROM weather_requests ORDER BY timestamp"
+            statement = "SELECT * FROM weather_requests ORDER BY timestamp DESC"
 
             cursor.execute(statement)
 
